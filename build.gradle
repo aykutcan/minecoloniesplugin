@@ -1,0 +1,153 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven { url = 'https://files.minecraftforge.net/maven' }
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+    }
+}
+
+repositories {
+    mavenLocal()
+    jcenter()
+    mavenCentral()
+    maven {
+        name 'LDTTeam - Modding'
+        url 'https://ldtteam.jfrog.io/ldtteam/modding/'
+    }
+    maven {
+        url 'https://www.dogforce-games.com/maven/'
+    }
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'jacoco'
+apply plugin: 'maven-publish'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+
+compileJava.options.encoding = "UTF-8"
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+        resources {
+            srcDir 'src/main/resources'
+            srcDir 'src/main/generated/resources'
+            exclude "assets/minecoloniesplugin/lang/default.json"
+        }
+        compileClasspath += compileClasspath
+    }
+}
+
+ext.configFile = file "build.properties"
+configFile.withReader {
+    def prop = new Properties()
+    prop.load(it)
+    ext.config = new ConfigSlurper().parse prop
+}
+
+configurations {
+    contained {
+        transitive = false
+    }
+
+    additionalMods {
+        transitive = false
+    }
+
+    apiImplementation.extendsFrom contained
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${config.minecraft_version}-${config.forge_version}"
+
+    implementation fg.deobf("com.minecolonies:minecolonies:${config.minecolonies_version}:universal")
+    contained fg.deobf("com.minecolonies:minecolonies:${config.minecolonies_version}:universal")
+    additionalMods "com.minecolonies:minecolonies:${config.minecolonies_version}:universal"
+
+    implementation fg.deobf("com.ldtteam:structurize:${config.structurize_version}")
+    contained fg.deobf("com.ldtteam:structurize:${config.structurize_version}")
+    additionalMods "com.ldtteam:structurize:${config.structurize_version}"
+
+    compile "com.ldtteam:datagenerators:${config.datagen_version}"
+
+    implementation fg.deobf("mezz.jei:jei-1.16.4:${config.jei_version}")
+    compileOnly fg.deobf("com.resourcefulbees:ResourcefulBees:${config.rb_version}")
+
+    implementation 'com.intellij:annotations:+@jar'
+}
+
+group = "net.kirpideleri"
+version = config.minecraft_version.toString() + "-" + System.getenv().containsKey("Version") ? System.getenv("Version") : 'null'
+archivesBaseName = "minecoloniesplugin"
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
+minecraft {
+
+    mappings channel: 'snapshot', version: "${config.mappings}"
+
+    runs {
+        client {
+            workingDirectory project.file('runClient')
+
+            property 'forge.logging.markers', 'SCAN'
+
+            property 'forge.logging.console.level', 'info'
+            properties 'mixin.env.disableRefMap': 'true'
+
+            mods {
+                minecoloniesplugin {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('runServer')
+
+            property 'forge.logging.console.level', 'info'
+            property 'mixin.env.disableRefMap', 'true'
+
+            mods {
+                minecoloniesplugin {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('runData')
+
+            property 'forge.logging.console.level', 'info'
+
+            args '--mod', 'minecolonies', '--all', '--output', file('src/main/generated/resources'), '--input', file('src/main/resources'), '--existing', file('src/main/resources'), '--existing-mod', 'structurize'
+
+            mods {
+                minecoloniesplugin {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+//From forge
+jar {
+    from sourceSets.main.output
+}
+
+idea {
+    module {
+        inheritOutputDirs = true
+    }
+}
