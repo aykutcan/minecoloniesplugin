@@ -1,7 +1,7 @@
 package net.kirpideleri.minecoloniesplugin;
 
 import com.ldtteam.structurize.util.LanguageHandler;
-import net.kirpideleri.minecoloniesplugin.items.ItemInventoryBoard;
+import net.kirpideleri.minecoloniesplugin.items.ItemReportBoard;
 import net.kirpideleri.minecoloniesplugin.util.constant.Constants;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -26,7 +26,7 @@ public class MineColoniesPlugin
 
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Constants.MOD_ID);
 
-    public static final RegistryObject<ItemInventoryBoard> INVENTORY_BOARD = ITEMS.register("inventoryboard",()-> new ItemInventoryBoard(new Item.Properties()));
+    public static final RegistryObject<ItemReportBoard> REPORT_BOARD = ITEMS.register("reportboard",()-> new ItemReportBoard(new Item.Properties()));
 
     public MineColoniesPlugin() {
 

@@ -1,0 +1,17 @@
+<window xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" size="250 375" pause="false"
+        lightbox="false"
+        xsi:noNamespaceSchemaLocation="file:../../../../../api/java/com/minecolonies/blockout/blockOut.xsd">
+    <switch id="pages" size="100% 100%">
+        <view id="pageInventory" size="100% 100%">
+            <layout source="minecoloniesplugin:gui/inventorypage.xml"/>
+        </view>
+        <view id="pageBuilding" size="100% 100%">
+            <layout source="minecoloniesplugin:gui/inventorypage.xml"/>
+        </view>
+
+    </switch>
+    <buttonimage id="prevPage" size="20 20" pos="15 15"
+                 source="minecoloniesplugin:textures/gui/common/turn_page_left.png"/>
+    <buttonimage id="nextPage" size="20 20" pos="215 15"
+                 source="minecoloniesplugin:textures/gui/common/turn_page_right.png"/>
+</window>

@@ -6,7 +6,7 @@ import com.minecolonies.api.colony.IColonyView;
 import com.minecolonies.api.creativetab.ModCreativeTabs;
 import com.minecolonies.api.tileentities.AbstractTileEntityColonyBuilding;
 import com.minecolonies.api.tileentities.TileEntityColonyBuilding;
-import net.kirpideleri.minecoloniesplugin.client.gui.WindowInventoryBoard;
+import net.kirpideleri.minecoloniesplugin.client.gui.WindowReportBoard;
 import net.kirpideleri.minecoloniesplugin.util.constant.TranslationConstants;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -25,9 +25,9 @@ import org.jetbrains.annotations.Nullable;
 import static com.minecolonies.api.util.constant.Constants.STACKSIZE;
 
 /**
- * Class describing the inventoryBoard item.
+ * Class describing the reportBoard item.
  */
-public class ItemInventoryBoard extends AbstractItemMinecolonies
+public class ItemReportBoard extends AbstractItemMinecolonies
 {
     /**
      * Tag of the colony.
@@ -39,18 +39,18 @@ public class ItemInventoryBoard extends AbstractItemMinecolonies
      *
      * @param properties the properties.
      */
-    public ItemInventoryBoard(final Item.Properties properties)
+    public ItemReportBoard(final Item.Properties properties)
     {
-        super("inventoryboard", properties.maxStackSize(STACKSIZE).group(ModCreativeTabs.MINECOLONIES));
+        super("reportboard", properties.maxStackSize(STACKSIZE).group(ModCreativeTabs.MINECOLONIES));
     }
 
     @Override
     @NotNull
     public ActionResultType onItemUse(final ItemUseContext ctx)
     {
-        final ItemStack inventoryBoard = ctx.getPlayer().getHeldItem(ctx.getHand());
+        final ItemStack reportBoard = ctx.getPlayer().getHeldItem(ctx.getHand());
 
-        final CompoundNBT compound = checkForCompound(inventoryBoard);
+        final CompoundNBT compound = checkForCompound(reportBoard);
         final TileEntity entity = ctx.getWorld().getTileEntity(ctx.getPos());
 
         if (entity instanceof TileEntityColonyBuilding)
@@ -60,7 +60,7 @@ public class ItemInventoryBoard extends AbstractItemMinecolonies
             {
                 LanguageHandler.sendPlayerMessage(
                         ctx.getPlayer(),
-                        TranslationConstants.COM_MINECOLONIES_INVENTORYBOARD_COLONY_SET,
+                        TranslationConstants.COM_MINECOLONIES_REPORTBOARD_COLONY_SET,
                         ((AbstractTileEntityColonyBuilding) entity).getColony().getName());
             }
         }
@@ -101,17 +101,17 @@ public class ItemInventoryBoard extends AbstractItemMinecolonies
     /**
      * Check for the compound and return it. If not available create and return it.
      *
-     * @param inventoryBoard the inventory to check for.
+     * @param reportBoard the inventory to check for.
      * @return the compound of the inventory.
      */
-    private static CompoundNBT checkForCompound(final ItemStack inventoryBoard)
+    private static CompoundNBT checkForCompound(final ItemStack reportBoard)
     {
-        if (!inventoryBoard.hasTag()) inventoryBoard.setTag(new CompoundNBT());
-        return inventoryBoard.getTag();
+        if (!reportBoard.hasTag()) reportBoard.setTag(new CompoundNBT());
+        return reportBoard.getTag();
     }
 
     /**
-     * Opens the inventoryboard window if there is a valid colony linked
+     * Opens the reportboard window if there is a valid colony linked
      * @param compound the item compound
      * @param player the player entity opening the window
      */
@@ -122,14 +122,14 @@ public class ItemInventoryBoard extends AbstractItemMinecolonies
             final IColonyView colonyView = IColonyManager.getInstance().getColonyView(compound.getInt(TAG_COLONY), world.getDimensionKey());
             if (colonyView != null) {
 
-                @Nullable final WindowInventoryBoard window = new WindowInventoryBoard(colonyView,world);
+                @Nullable final WindowReportBoard window = new WindowReportBoard(colonyView,world);
                 window.open();
 
             }
         }
         else
         {
-            player.sendStatusMessage(new TranslationTextComponent(TranslationConstants.COM_MINECOLONIES_INVENTORYBOARD_NEED_COLONY), true);
+            player.sendStatusMessage(new TranslationTextComponent(TranslationConstants.COM_MINECOLONIES_REPORTBOARD_NEED_COLONY), true);
         }
     }
 }

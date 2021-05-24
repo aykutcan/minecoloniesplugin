@@ -32,34 +32,22 @@ import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABI
 /**
  * Inventory Board window.
  */
-public class WindowInventoryBoard extends AbstractWindowSkeleton {
+public class WindowReportBoard extends AbstractWindowSkeleton {
     /**
      * Resource suffix.
      */
-    private static final String BUILD_TOOL_RESOURCE_SUFFIX = ":gui/inventoryboard.xml";
-    /**
-     * InventoryBoard Window list id.
-     */
+    private static final String BUILD_TOOL_RESOURCE_SUFFIX = ":gui/inventorypage.xml";
+
+    private static final String PAGE_FIELDS = "pageFields";
+
     private static final String WINDOW_ID_LIST_INVENTORY = "inventoryList";
 
-    /**
-     * InventoryBoard Window item icon id.
-     */
     private static final String WINDOW_ID_ITEM_ICON = "itemIcon";
-    /**
-     * InventoryBoard Window item name id.
-     */
 
     private static final String WINDOW_ID_ITEM_NAME = "itemName";
 
-    /**
-     * InventoryBoard Window item count id.
-     */
     private static final String WINDOW_ID_ITEM_COUNT = "itemCount";
 
-    /**
-     * Scrollinglist of the inventoryBoard window.
-     */
     private ScrollingList inventoryList;
 
     /**
@@ -74,12 +62,12 @@ public class WindowInventoryBoard extends AbstractWindowSkeleton {
     private boolean hide = false;
 
     /**
-     * Constructor of the Inventory Board GUI.
+     * Constructor of the Report Board GUI.
      *
      * @param colony the colony to check the requests for.
      * @param world  the world.
      */
-    public WindowInventoryBoard(final IColonyView colony, IWorld world) {
+    public WindowReportBoard(final IColonyView colony, IWorld world) {
         super(Constants.MOD_ID + BUILD_TOOL_RESOURCE_SUFFIX);
         this.colony = colony;
         this.world = world;
